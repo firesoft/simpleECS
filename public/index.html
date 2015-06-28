@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+
+	<style>
+
+	.bonus {
+		position:absolute;
+		cursor: pointer;
+	}
+
+	</style>
+
+
+	<script src="./js/timer.js"></script>
+	<script src="./js/vector2d.js"></script>
+	<script src="./js/animationFrameFuncs.js"></script>
+	<script src="./js/base.js"></script>
+	<script src="./js/entityfactory.js"></script>
+	<script src="./js/bonusfactory.js"></script>
+	<script src="./js/boardresizesystem.js"></script>
+	<script src="./js/bonusgame.js"></script>
+	<script src="./js/collidablecomponent.js"></script>
+	<script src="./js/collisionsystem.js"></script>
+	<script src="./js/inputsystem.js"></script>
+	<script src="./js/physicscomponent.js"></script>
+	<script src="./js/physicssystem.js"></script>
+	<script src="./js/rendercomponent.js"></script>
+	<script src="./js/boardcomponent.js"></script>
+	<script src="./js/visibilitycomponent.js"></script>
+	<script src="./js/rendersystem.js"></script>
+	<script src="./js/bonusspawnsystem.js"></script>
+	<script src="./js/blinkingsystem.js"></script>
+	<script src="./js/blinkingcomponent.js"></script>
+	<script src="./js/imageloader.js"></script>
+	</head>
+	<body>
+	
+	<script>
+		var imageLoader = new ImageLoader();
+		imageLoader.load('./img/gift2.png', function (img) {
+			var game = new BonusGame({
+				bonusImage: img,
+				bonusClick: function() {console.log('klik!')}
+			});
+			game.start();
+		});
+	</script>
+	</body>
+</html>
