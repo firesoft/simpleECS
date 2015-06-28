@@ -3,7 +3,10 @@ simple ECS implementation
 
 requires node.js with express
 
-run command:
+installation:
+npm install
+
+run server (just to serve files):
 node app.js
 
 in browser:
