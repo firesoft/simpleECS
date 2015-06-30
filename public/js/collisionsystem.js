@@ -72,25 +72,37 @@ CollisionSystem.prototype._checkForCollisionAABBvsBoard = function(entityAABB, e
 }
 
 CollisionSystem.prototype._checkForCollisionAABBvsAABB = function(entityA, entityB) {
-	var coordA = this._getAABBCoordinates(entityA);
-	var coordB = this._getAABBCoordinates(entityB);
-
-	if (!(coordA.x1 < coordB.x2 && coordA.x2 > coordB.x1 && coordA.y1 < coordB.y2 && coordA.y2 > coordB.y1)) {
+	if (!this._isAABBCollision(entityA, entityB)) {
 		return;
 	}
-	var forceA = entityB.components.physics.position.copy().multiply(-1).add(entityA.components.physics.position).normalize().multiply(10000);
-	var forceB = entityA.components.physics.position.copy().multiply(-1).add(entityB.components.physics.position).normalize().multiply(10000);
-	entityA.components.physics.force.add(forceA);
-	entityB.components.physics.force.add(forceB);
 
+	var entityAPhysics = entityA.components.physics;
+	var entityBPhysics = entityB.components.physics;
 
-	entityA.components.physics.torque -= sign(entityB.components.physics.angularVelocity) * 8000;
-	entityB.components.physics.torque -= sign(entityA.components.physics.angularVelocity) * 8000;
-
-
+	this._updateLinearPhysicsAfterCollision(entityAPhysics, entityBPhysics);
+	this._updateAngularPhysicsAfterCollision(entityAPhysics, entityBPhysics);
 
 	entityA.addComponent(new BlinkingComponent());
 	entityB.addComponent(new BlinkingComponent());
+}
+
+CollisionSystem.prototype._updateLinearPhysicsAfterCollision = function(entityAPhysics, entityBPhysics) {
+	var forceA = entityBPhysics.position.copy().multiply(-1).add(entityAPhysics.position).normalize().multiply(10000);
+	var forceB = entityAPhysics.position.copy().multiply(-1).add(entityBPhysics.position).normalize().multiply(10000);
+	entityAPhysics.force.add(forceA);
+	entityBPhysics.force.add(forceB);
+}
+
+CollisionSystem.prototype._updateAngularPhysicsAfterCollision = function(entityAPhysics, entityBPhysics) {
+	entityAPhysics.torque -= sign(entityBPhysics.angularVelocity) * 8000;
+	entityBPhysics.torque -= sign(entityAPhysics.angularVelocity) * 8000;
+}
+
+CollisionSystem.prototype._isAABBCollision = function(entityA, entityB) {
+	var coordA = this._getAABBCoordinates(entityA);
+	var coordB = this._getAABBCoordinates(entityB);
+
+	return (coordA.x1 < coordB.x2 && coordA.x2 > coordB.x1 && coordA.y1 < coordB.y2 && coordA.y2 > coordB.y1);
 }
 
 CollisionSystem.prototype._getAABBCoordinates = function(entity) {

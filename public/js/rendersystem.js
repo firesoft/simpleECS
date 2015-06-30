@@ -16,7 +16,6 @@ RenderSystem.prototype._updateEntity = function(entity, dt) {
 	renderC.img.style.left = (physicsC.position.x - (renderC.width / 2)) + "px";
 	renderC.img.style.top = (physicsC.position.y - (renderC.height / 2)) + "px";
 
-	// console.log(physicsC.rotation);
 	renderC.img.style.transform = "rotate(" + Math.floor(physicsC.rotation) + "deg)";
 
 	if (entity.components.visibility) {
