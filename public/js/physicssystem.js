@@ -23,13 +23,15 @@ PhysicsSystem.prototype._updatePhysicsComponent = function(physicsComponent, dt)
 PhysicsSystem.prototype._updateAngularPhysics = function(physicsComponent, dt) {
 	this._updateRotation(physicsComponent, dt);
 	this._fixRotation(physicsComponent);
-	this._applyAngularFriction(physicsComponent, dt);
-	this._checkAngularVelocity(physicsComponent);
+	//this._applyAngularFriction(physicsComponent, dt);
+	//this._checkAngularVelocity(physicsComponent);
 	this._zeroTorque(physicsComponent);
 }
 
 PhysicsSystem.prototype._updateRotation = function(physicsComponent, dt) {
 	physicsComponent.angularVelocity += physicsComponent.torque * (1 / this.momentOfInertia) * dt;
+	physicsComponent.angularVelocity += physicsComponent.angularVelocity * -1 * dt * this.frictionCoeff;
+	this._checkAngularVelocity(physicsComponent);
 	physicsComponent.rotation += physicsComponent.angularVelocity * dt;
 }
 
@@ -58,13 +60,19 @@ PhysicsSystem.prototype._zeroTorque = function(physicsComponent) {
 
 PhysicsSystem.prototype._updateLinearPhysics = function(physicsComponent, dt) {
 	this._updateEntityPosition(physicsComponent, dt);
-	this._applyLinearFriction(physicsComponent, dt);
-	this._checkLinearVelocity(physicsComponent, dt);
+	//this._applyLinearFriction(physicsComponent, dt);
+	//this._checkLinearVelocity(physicsComponent, dt);
 }
 
 PhysicsSystem.prototype._updateEntityPosition = function(physicsComponent, dt) {
 	var acceleration = physicsComponent.force.copy().multiply(1 / physicsComponent.mass);
 	physicsComponent.velocity.add(acceleration.multiply(dt));
+	physicsComponent.velocity.add(physicsComponent.velocity.copy().perpendicular().multiply(0.001 * dt * physicsComponent.angularVelocity));
+	physicsComponent.velocity.add(physicsComponent.velocity.copy().multiply(-1).multiply(dt * this.frictionCoeff));
+	this._checkLinearVelocity(physicsComponent, dt);
+
+	//here add relation between linear velocity and angular one
+
 	physicsComponent.position.add(physicsComponent.velocity.copy().multiply(dt));
 	physicsComponent.force.zero();
 }

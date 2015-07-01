@@ -39,6 +39,14 @@ Vector2d.prototype.sub = function(vector) {
 	return this;
 }
 
+Vector2d.prototype.perpendicular = function() {
+	var tmp = this.x;
+	this.x = -1 * this.y;
+	this.y = tmp;
+
+	return this;
+}
+
 Vector2d.prototype.dot = function(vector) {
 	return (this.x * vector.x + this.y * vector.y);
 }
